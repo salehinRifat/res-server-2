@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 require('dotenv').config()
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 //Middlewires
 const cors = require('cors');
@@ -24,12 +26,19 @@ async function run() {
     try {
         const menuCollection = client.db("RestauDB").collection("menu");
         const reviewsCollection = client.db("RestauDB").collection("reviews");
+        const cartCollection = client.db("RestauDB").collection("cart");
+
         app.get('/menu', async (req, res) => {
             const result = await menuCollection.find().toArray();
             res.send(result);
         })
         app.get('/reviews', async (req, res) => {
             const result = await reviewsCollection.find().toArray();
+            res.send(result);
+        })
+        app.post('/carts', async (req, res) => {
+            const cartItem = req.body;
+            const result = await cartCollection.insertOne(cartItem);
             res.send(result);
         })
         // Connect the client to the server	(optional starting in v4.7)
