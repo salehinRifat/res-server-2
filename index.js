@@ -66,6 +66,11 @@ async function run() {
             const result = await menuCollection.find().toArray();
             res.send(result);
         })
+        app.post('/menu', verifyToken, verifyAdmin, async (req, res) => {
+            const menuItem = req.body;
+            const result = await menuCollection.insertOne(menuItem);
+            res.send(result);
+        })
         // Reviews
         app.get('/reviews', async (req, res) => {
             const result = await reviewsCollection.find().toArray();
